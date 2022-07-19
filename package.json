@@ -3,7 +3,7 @@
   "displayName": "Compress My Css",
   "description": "Stylesheet formatter with single-line (stacked) rules format.",
   "publisher": "guasam",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "icon": "images/logo.png",
   "license": "MIT",
   "homepage": "https://github.com/guasam/compress-my-css-vscode",
