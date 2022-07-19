@@ -40,7 +40,7 @@ export default class Compressor {
    */
   loadSettings(): void {
     const config = workspace.getConfiguration('compress-my-css');
-    this.settings.compressOnSave = config.get('compressOnSave', false);
+    this.settings.compressOnSave = config.get('compressOnSave', true);
     this.settings.showInfoDialog = config.get('showInfoDialog', true);
     this.settings.defaultMode = config.get('defaultMode', 'stacked');
     this.settings.spaceAfterRuleSelector = config.get('spaceAfterRuleSelector', true);

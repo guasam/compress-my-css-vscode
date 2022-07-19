@@ -33,6 +33,7 @@
         "compress-my-css.compressOnSave": {
           "order": 0,
           "type": "boolean",
+          "default": true,
           "description": "Enable/Disable compression on file save."
         },
         "compress-my-css.showInfoDialog": {
