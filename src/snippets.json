@@ -1,0 +1,22 @@
+{
+  "Compress My Css - Region": {
+    "prefix": "compress-my-css-region",
+    "description": "Compress My Css region with start, end comment tags",
+    "body": ["/* @compress-my-css */", "", "$1", "", "/* @end-compress-my-css */"]
+  },
+  "Compress My Css - Region Mode": {
+    "prefix": "compress-my-css-region-mode",
+    "description": "Compress My Css region with start, end comment tags with mode",
+    "body": ["/* @compress-my-css : ${1:stacked} */", "", "$2", "", "/* @end-compress-my-css */"]
+  },
+  "Compress My Css : Start": {
+    "prefix": "compress-my-css-start",
+    "description": "Compress My Css starting comment tag",
+    "body": "/* @compress-my-css */"
+  },
+  "Compress My Css : End": {
+    "prefix": "compress-my-css-end",
+    "description": "Copyright Protection ending comment tag",
+    "body": "/* @end-compress-my-css */"
+  }
+}
