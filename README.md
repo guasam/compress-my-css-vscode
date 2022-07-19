@@ -8,7 +8,7 @@
 <p align="center">
   A unique CSS stylesheet formatter with single-line (stacked) rules formatting support.
   <br>
-  <a href="https://marketplace.visualstudio.com/items?itemName=compress-my-css">Compress My Css - Visual Studio Marketplace</a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=guasam.compress-my-css">Compress My Css - Visual Studio Marketplace</a>
 </p>
 <br>
 <p align="center">
