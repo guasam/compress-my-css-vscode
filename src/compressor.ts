@@ -1,9 +1,11 @@
 import { window, Position, Range, TextDocumentWillSaveEvent, workspace } from 'vscode';
 
+type CompressionMode = 'stacked' | 'minified';
+
 interface CompressorSettings {
   compressOnSave?: boolean;
   showInfoDialog?: boolean;
-  defaultMode?: 'stacked' | 'minified';
+  defaultMode?: CompressionMode;
 }
 
 export default class Compressor {
@@ -70,7 +72,7 @@ export default class Compressor {
     return document.getText(range);
   }
 
-  compress(content: string, type: string): string {
+  compress(content: string, mode: CompressionMode): string {
     // Remove all newlines, linebreaks etc.
     content = content.replace(/(\r\n|\n|\r|\t)/gm, '');
 
@@ -86,6 +88,14 @@ export default class Compressor {
     // Remove whitespaces around semicolon
     content = content.replace(/\s+;/gm, ';');
     content = content.replace(/;\s+/gm, ';');
+
+    // Stacked Compression Mode?
+    if (mode ?? this.settings.defaultMode === 'stacked') {
+      // New line after closing parantheses
+      content = content.replace(/}/gm, '}\r\n');
+      // New line between ;|@ to make @at-rules neat
+      content = content.replace(/\;\@/gm, ';\r\n@');
+    }
 
     return content.trim();
   }
