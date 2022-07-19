@@ -1,9 +1,16 @@
 import { window, Position, Range, TextDocumentWillSaveEvent, workspace } from 'vscode';
 
+interface CompressorSettings {
+  compressOnSave?: boolean;
+  showInfoDialog?: boolean;
+  defaultMode?: 'stacked' | 'minified';
+}
+
 export default class Compressor {
   startTagName = '@compress-my-css';
   endTagName = '@end-compress-my-css';
   formatTypes = ['ignore', 'stacked'];
+  settings: CompressorSettings = {};
 
   constructor() {
     this.loadSettings();
@@ -11,6 +18,9 @@ export default class Compressor {
 
   loadSettings(): void {
     const config = workspace.getConfiguration('compress-my-css');
+    this.settings.compressOnSave = config.get('compressOnSave', false);
+    this.settings.showInfoDialog = config.get('showInfoDialog', false);
+    this.settings.defaultMode = config.get('defaultMode', 'stacked');
   }
 
   /**
