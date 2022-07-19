@@ -3,10 +3,18 @@
   "displayName": "Compress My Css",
   "description": "Compress stylesheet (css,scss,less,etc.) region in files",
   "version": "0.0.1",
+  "icon": "logo.png",
+  "homepage": "https://github.com/guasam/compress-my-css-vscode",
   "engines": {
     "vscode": "^1.69.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/guasam/compress-my-css-vscode"
+  },
   "categories": [
+    "Formatters",
+    "Linters",
     "Other"
   ],
   "activationEvents": [
