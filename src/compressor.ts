@@ -98,9 +98,7 @@ export default class Compressor {
       if (this.settings.showInfoDialog) {
         this.outputBytes = new TextEncoder().encode(content).length;
         this.savingsAverage = (100 - (this.outputBytes / this.inputBytes) * 100).toFixed(2);
-        window.showInformationMessage(
-          `Compress My Css : Applied compression with total size ${this.savingsAverage}%`,
-        );
+        window.showInformationMessage(`Compress My Css : Applied compression with total size ${this.savingsAverage}%`);
       }
     }
   }
