@@ -44,7 +44,7 @@ export default class Compressor {
     const endTagRegex = `\\/\\* ${this.endTagName} \\*\\/`;
     const regex = new RegExp('(?<=' + startTagRegex + '\\s+).*?(?=\\s+' + endTagRegex + ')', 'gs');
 
-    content = content.replace(regex, this.compress);
+    content = content.replace(regex, this.compress.bind(this));
     console.log(content);
   }
 
