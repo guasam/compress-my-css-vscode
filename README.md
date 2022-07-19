@@ -20,34 +20,9 @@
 
 <br>
 
-## 🔎 Compression modes
+**Compress My Css Demo :**
 
-**Stacked Mode**
-
-Stack mode formats stylesheet code to have single-line per stylesheet selector rule.
-
-```css
-body { color:red; font-weight:bold; background:red; }
-#app { font-size:1rem; margin:10px 20px 30px 40px; }
-#container { display:flex; flex-direction:column; }
-...
-```
-
-<br>
-
-**Minified Mode**
-
-Minified mode formats stylesheet code to have only one line for all stylesheet rules.
-
-```css
-body {color:red;}#app {font-size:1rem;}#container {display:flex; flex-direction:column;}...
-```
-
-<br>
-
-**Ignore Mode**
-
-Ignore mode is useful if we want to mark a region without applying compression/format.
+<img src="images/animated/demo.gif" height="400" />
 
 <br><br>
 
@@ -66,12 +41,6 @@ You can compress stylesheet rules code by surrounding it with a special comment 
 ```css
 /* @end-compress-my-css */
 ```
-
-<br>
-
-**Working Demo :**
-
-<img src="images/animated/demo.gif" />
 
 <br>
 
@@ -101,22 +70,40 @@ You can asssign a compression mode for a region by changing **starting** comment
 
 ```css
 /* @compress-my-css : ignore */
-
-body {
-  font-size: 16px;
-}
-
-a {
-  color: lightblue;
-}
-
-/* @end-compress-my-css */
 ```
 
 <br>
 
-**NOTE** : If no compression mode provided in comment tag, it will use default mode based on extension settings.
+## 🔎 Compression modes
 
+**Stacked Mode**
+
+Stack mode formats stylesheet code to have single-line per stylesheet selector rule.
+
+```css
+body { color:red; font-weight:bold; background:red; }
+#app { font-size:1rem; margin:10px 20px 30px 40px; }
+#container { display:flex; flex-direction:column; }
+...
+```
+
+<br>
+
+**Minified Mode**
+
+Minified mode formats stylesheet code to have only one line for all stylesheet rules.
+
+```css
+body {color:red;}#app {font-size:1rem;}#container {display:flex; flex-direction:column;}...
+```
+
+<br>
+
+**Ignore Mode**
+
+Ignore mode is useful if we want to mark a region without applying compression/format.
+
+(**NOTE** : If no compression mode provided in comment tag, it will use default mode based on extension settings)
 <br>
 
 ## ⚙️ Extension Settings
@@ -139,5 +126,4 @@ In the begining, this extension was created for personal use only as a web appli
 
 As the backend of this extension is using only "Regex Expressions" for matching, replacing the text from editor. There might be some use-cases where the extension will provide unwanted results.
 
-Feel free to contribute into repository for improving this extension :
-https://github.com/guasam/compress-my-css-vscode
+Feel free to contribute into repository for improving this extension :<br>https://github.com/guasam/compress-my-css-vscode
