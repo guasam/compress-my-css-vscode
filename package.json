@@ -53,6 +53,12 @@
             "Stacked mode will apply single-line for every stylesheet rule.",
             "Minified mode will combine all stylesheet rules into just one line."
           ]
+        },
+        "compress-my-css.spaceAfterRuleSelector": {
+          "order": 3,
+          "type": "boolean",
+					"default": true,
+          "description": "Keep a space after stylesheet rule selector"
         }
       }
     }
