@@ -6,6 +6,7 @@ interface CompressorSettings {
   compressOnSave?: boolean;
   showInfoDialog?: boolean;
   defaultMode?: CompressionMode;
+  spaceAfterRuleSelector?: boolean;
 }
 
 export default class Compressor {
@@ -23,6 +24,7 @@ export default class Compressor {
     this.settings.compressOnSave = config.get('compressOnSave', false);
     this.settings.showInfoDialog = config.get('showInfoDialog', false);
     this.settings.defaultMode = config.get('defaultMode', 'stacked');
+    this.settings.spaceAfterRuleSelector = config.get('spaceAfterRuleSelector', true);
   }
 
   /**
@@ -89,12 +91,17 @@ export default class Compressor {
     content = content.replace(/\s+;/gm, ';');
     content = content.replace(/;\s+/gm, ';');
 
-    // Stacked Compression Mode?
+    // Stacked Compression Mode
     if (mode ?? this.settings.defaultMode === 'stacked') {
       // New line after closing parantheses
       content = content.replace(/}/gm, '}\r\n');
       // New line between ;|@ to make @at-rules neat
       content = content.replace(/\;\@/gm, ';\r\n@');
+    }
+
+    // Space after rule selector
+    if (this.settings.spaceAfterRuleSelector) {
+      content = content.replace(/{/gm, ' {');
     }
 
     return content.trim();
