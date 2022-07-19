@@ -164,7 +164,8 @@ export default class Compressor {
     content = content.replace(/;\s+/gm, ';');
 
     // Stacked Compression Mode
-    if (mode ?? this.settings.defaultMode === 'stacked') {
+    const isStackedMode = mode === 'stacked' ?? this.settings.defaultMode;
+    if (isStackedMode) {
       // New line after closing parantheses
       content = content.replace(/}/gm, '}\r\n');
       // New line between ;|@ to make @at-rules neat
@@ -176,16 +177,19 @@ export default class Compressor {
       content = content.replace(/{/gm, ' {');
     }
 
-    // Space inside rule parantheses
-    if (this.settings.spaceInsideParantheses) {
-      content = content.replace(/{/gm, '{ ');
-      content = content.replace(/}/gm, ' }');
-    }
+    // Not minified mode?
+    if (mode !== 'minified') {
+      // Space inside rule parantheses
+      if (this.settings.spaceInsideParantheses) {
+        content = content.replace(/{/gm, '{ ');
+        content = content.replace(/}/gm, ' }');
+      }
 
-    // Space between rule properties
-    if (this.settings.spaceBetweenProperties) {
-      content = content.replace(/;/gm, '; ');
-      content = content.replace(/\s+}/gm, ' }');
+      // Space between rule properties
+      if (this.settings.spaceBetweenProperties) {
+        content = content.replace(/;/gm, '; ');
+        content = content.replace(/\s+}/gm, ' }');
+      }
     }
 
     // New line at begining to have spacing between startTag
