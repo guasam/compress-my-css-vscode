@@ -7,6 +7,7 @@ interface CompressorSettings {
   showInfoDialog?: boolean;
   defaultMode?: CompressionMode;
   spaceAfterRuleSelector?: boolean;
+  spaceInsideParantheses?: boolean;
 }
 
 export default class Compressor {
@@ -28,6 +29,7 @@ export default class Compressor {
     this.settings.showInfoDialog = config.get('showInfoDialog', false);
     this.settings.defaultMode = config.get('defaultMode', 'stacked');
     this.settings.spaceAfterRuleSelector = config.get('spaceAfterRuleSelector', true);
+    this.settings.spaceInsideParantheses = config.get('spaceInsideParantheses', true);
   }
 
   /**
@@ -111,6 +113,7 @@ export default class Compressor {
     token: number,
     fullContent: string,
   ): string {
+    //
     // Remove all newlines, linebreaks etc.
     content = content.replace(/(\r\n|\n|\r|\t)/gm, '');
 
@@ -138,6 +141,12 @@ export default class Compressor {
     // Space after rule selector
     if (this.settings.spaceAfterRuleSelector) {
       content = content.replace(/{/gm, ' {');
+    }
+
+    // Space inside rule parantheses
+    if (this.settings.spaceInsideParantheses) {
+      content = content.replace(/{/gm, '{ ');
+      content = content.replace(/}/gm, ' }');
     }
 
     console.log(content);

@@ -57,8 +57,14 @@
         "compress-my-css.spaceAfterRuleSelector": {
           "order": 3,
           "type": "boolean",
-					"default": true,
-          "description": "Keep a space after stylesheet rule selector"
+          "default": true,
+          "description": "Space after stylesheet rule selector"
+        },
+        "compress-my-css.spaceInsideParantheses": {
+          "order": 4,
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Space inside stylesheet rule parantheses, example : `{ props }` "
         }
       }
     }
