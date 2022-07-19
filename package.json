@@ -58,7 +58,7 @@
           "order": 3,
           "type": "boolean",
           "default": true,
-          "description": "Space after stylesheet rule selector"
+          "description": "Space after stylesheet rule selector."
         },
         "compress-my-css.spaceInsideParantheses": {
           "order": 4,
@@ -71,6 +71,11 @@
           "type": "boolean",
           "default": true,
           "markdownDescription": "Space between stylesheet rule properties, example : `{ foo: value; bar: value }` "
+        },
+        "compress-my-css.removeComments": {
+          "order": 6,
+          "type": "boolean",
+          "markdownDescription": "Remove comments from stylesheet."
         }
       }
     }

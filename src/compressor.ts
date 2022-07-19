@@ -1,22 +1,31 @@
-import { window, Position, Range, TextDocumentWillSaveEvent, workspace, ExtensionContext, commands } from 'vscode';
+import {
+  window,
+  Position,
+  Range,
+  TextDocumentWillSaveEvent,
+  workspace,
+  ExtensionContext,
+  commands,
+  TextEditor,
+} from 'vscode';
 
-type CompressionMode = 'stacked' | 'minified' | 'ignore';
-
-interface CompressorSettings {
-  compressOnSave?: boolean;
-  showInfoDialog?: boolean;
-  defaultMode?: CompressionMode;
-  spaceAfterRuleSelector?: boolean;
-  spaceInsideParantheses?: boolean;
-  spaceBetweenProperties?: boolean;
-}
-
+/**
+ * Compressor
+ *
+ * This is the back bone behind extension for compressing css in various
+ * modes and settings of Visual Studio Code.
+ *
+ * @author  guasam
+ * @url     https://github.com/guasam
+ */
 export default class Compressor {
   startTagName = '@compress-my-css';
   endTagName = '@end-compress-my-css';
   formatTypes = ['stacked', 'minified', 'ignore'];
   settings: CompressorSettings = {};
   output = '';
+  editor: TextEditor | undefined;
+  range: Range | undefined;
 
   constructor() {
     this.loadSettings();
@@ -33,6 +42,7 @@ export default class Compressor {
     this.settings.spaceAfterRuleSelector = config.get('spaceAfterRuleSelector', true);
     this.settings.spaceInsideParantheses = config.get('spaceInsideParantheses', true);
     this.settings.spaceBetweenProperties = config.get('spaceBetweenProperties', true);
+    this.settings.removeComments = config.get('removeComments', false);
   }
 
   /**
@@ -61,14 +71,20 @@ export default class Compressor {
       return;
     }
 
+    // Regex Lunacy!!
     const formats = '(' + this.formatTypes.join('|') + ')';
     const startTagRegex = `(\\/\\* ${this.startTagName} (?:\\: ${formats} )?\\*\\/)`;
     const endTagRegex = `(\\/\\* ${this.endTagName} \\*\\/)`;
     const regex = new RegExp('(?<=' + startTagRegex + '\\s+).*?(?=\\s+' + endTagRegex + ')', 'gs');
 
+    // Lets do compression
     content = content.replace(regex, this.compress.bind(this));
 
-    console.log(content);
+    // Apply content into editor
+    if (content && this.range) {
+      const range = this.range;
+      this.editor?.edit((edit) => edit.replace(range, content));
+    }
   }
 
   /**
@@ -94,12 +110,14 @@ export default class Compressor {
     }
 
     // Gather useful variables
-    const editor = window.activeTextEditor;
-    const document = editor.document;
+    this.editor = window.activeTextEditor;
+    const document = this.editor.document;
     const start = new Position(0, 0);
     const end = new Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
-    const range = new Range(start, end);
-    return document.getText(range);
+    this.range = new Range(start, end);
+
+    // Return editor text
+    return document.getText(this.range);
   }
 
   /**
@@ -122,6 +140,11 @@ export default class Compressor {
     // Ignore compression mode?
     if (mode === 'ignore') {
       return content;
+    }
+
+    // Remove comments
+    if (this.settings.removeComments) {
+      content = content.replace(/\/\*.+\*\//gm, '');
     }
 
     // Remove all newlines, linebreaks etc.
@@ -165,8 +188,8 @@ export default class Compressor {
       content = content.replace(/\s+}/gm, ' }');
     }
 
-    // New lines at begining to have spacing between startTag
-    content = "\n\r\n\r" + content.trim();
+    // New line at begining to have spacing between startTag
+    content = '\n\r' + content.trim();
 
     return content;
   }
