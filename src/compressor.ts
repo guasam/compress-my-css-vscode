@@ -1,6 +1,6 @@
 import { window, Position, Range, TextDocumentWillSaveEvent, workspace, ExtensionContext, commands } from 'vscode';
 
-type CompressionMode = 'stacked' | 'minified';
+type CompressionMode = 'stacked' | 'minified' | 'ignore';
 
 interface CompressorSettings {
   compressOnSave?: boolean;
@@ -8,13 +8,15 @@ interface CompressorSettings {
   defaultMode?: CompressionMode;
   spaceAfterRuleSelector?: boolean;
   spaceInsideParantheses?: boolean;
+  spaceBetweenProperties?: boolean;
 }
 
 export default class Compressor {
   startTagName = '@compress-my-css';
   endTagName = '@end-compress-my-css';
-  formatTypes = ['ignore', 'stacked'];
+  formatTypes = ['stacked', 'minified', 'ignore'];
   settings: CompressorSettings = {};
+  output = '';
 
   constructor() {
     this.loadSettings();
@@ -30,6 +32,7 @@ export default class Compressor {
     this.settings.defaultMode = config.get('defaultMode', 'stacked');
     this.settings.spaceAfterRuleSelector = config.get('spaceAfterRuleSelector', true);
     this.settings.spaceInsideParantheses = config.get('spaceInsideParantheses', true);
+    this.settings.spaceBetweenProperties = config.get('spaceBetweenProperties', true);
   }
 
   /**
@@ -64,7 +67,8 @@ export default class Compressor {
     const regex = new RegExp('(?<=' + startTagRegex + '\\s+).*?(?=\\s+' + endTagRegex + ')', 'gs');
 
     content = content.replace(regex, this.compress.bind(this));
-    // console.log(content);
+
+    console.log(content);
   }
 
   /**
@@ -110,10 +114,16 @@ export default class Compressor {
     startTag: string,
     mode: CompressionMode,
     endTag: string,
-    token: number,
-    fullContent: string,
+    _token: number,
+    _fullContent: string,
   ): string {
     //
+
+    // Ignore compression mode?
+    if (mode === 'ignore') {
+      return content;
+    }
+
     // Remove all newlines, linebreaks etc.
     content = content.replace(/(\r\n|\n|\r|\t)/gm, '');
 
@@ -149,8 +159,15 @@ export default class Compressor {
       content = content.replace(/}/gm, ' }');
     }
 
-    console.log(content);
+    // Space between rule properties
+    if (this.settings.spaceBetweenProperties) {
+      content = content.replace(/;/gm, '; ');
+      content = content.replace(/\s+}/gm, ' }');
+    }
 
-    return content.trim();
+    // New lines at begining to have spacing between startTag
+    content = "\n\r\n\r" + content.trim();
+
+    return content;
   }
 }

@@ -64,7 +64,13 @@
           "order": 4,
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Space inside stylesheet rule parantheses, example : `{ props }` "
+          "markdownDescription": "Space inside stylesheet rule parantheses, example : `{ foo }` "
+        },
+        "compress-my-css.spaceBetweenProperties": {
+          "order": 5,
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Space between stylesheet rule properties, example : `{ foo: value; bar: value }` "
         }
       }
     }
