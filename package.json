@@ -1,7 +1,7 @@
 {
   "name": "compress-my-css",
   "displayName": "Compress My Css",
-  "description": "Compress stylesheet (css,scss,less,etc.) region in files",
+  "description": "Stylesheet formatter with single-line (stacked) rules format.",
   "publisher": "guasam",
   "version": "0.1.0",
   "icon": "images/logo.png",
