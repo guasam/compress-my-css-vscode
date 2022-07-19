@@ -2,11 +2,17 @@
   "name": "compress-my-css",
   "displayName": "Compress My Css",
   "description": "Compress stylesheet (css,scss,less,etc.) region in files",
+  "publisher": "guasam",
   "version": "0.1.0",
   "icon": "images/logo.png",
+  "license": "MIT",
   "homepage": "https://github.com/guasam/compress-my-css-vscode",
   "engines": {
     "vscode": "^1.69.0"
+  },
+  "author": {
+    "name": "guasam",
+    "url": "https://github.com/guasam"
   },
   "repository": {
     "type": "git",
@@ -17,6 +23,12 @@
     "Linters",
     "Other",
     "Snippets"
+  ],
+  "keywords": [
+    "single-line-css",
+    "css-format",
+    "stacked-css-rules",
+    "region-format-css"
   ],
   "activationEvents": [
     "onCommand:compress-my-css.run"
