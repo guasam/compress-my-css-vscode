@@ -38,6 +38,7 @@
         "compress-my-css.showInfoDialog": {
           "order": 1,
           "type": "boolean",
+          "default": true,
           "description": "Show information dialog after compression."
         },
         "compress-my-css.defaultMode": {

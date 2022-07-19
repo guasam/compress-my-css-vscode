@@ -1,3 +1,4 @@
+import { TextEncoder } from 'util';
 import {
   window,
   Position,
@@ -26,6 +27,9 @@ export default class Compressor {
   output = '';
   editor: TextEditor | undefined;
   range: Range | undefined;
+  inputBytes = 0;
+  outputBytes = 0;
+  savingsAverage = '';
 
   constructor() {
     this.loadSettings();
@@ -37,7 +41,7 @@ export default class Compressor {
   loadSettings(): void {
     const config = workspace.getConfiguration('compress-my-css');
     this.settings.compressOnSave = config.get('compressOnSave', false);
-    this.settings.showInfoDialog = config.get('showInfoDialog', false);
+    this.settings.showInfoDialog = config.get('showInfoDialog', true);
     this.settings.defaultMode = config.get('defaultMode', 'stacked');
     this.settings.spaceAfterRuleSelector = config.get('spaceAfterRuleSelector', true);
     this.settings.spaceInsideParantheses = config.get('spaceInsideParantheses', true);
@@ -71,6 +75,11 @@ export default class Compressor {
       return;
     }
 
+    // Set input bytes to display savings % with info dialog
+    if (this.settings.showInfoDialog) {
+      this.inputBytes = new TextEncoder().encode(content).length;
+    }
+
     // Regex Lunacy!!
     const formats = '(' + this.formatTypes.join('|') + ')';
     const startTagRegex = `(\\/\\* ${this.startTagName} (?:\\: ${formats} )?\\*\\/)`;
@@ -84,6 +93,15 @@ export default class Compressor {
     if (content && this.range) {
       const range = this.range;
       this.editor?.edit((edit) => edit.replace(range, content));
+
+      // Show information dialog?
+      if (this.settings.showInfoDialog) {
+        this.outputBytes = new TextEncoder().encode(content).length;
+        this.savingsAverage = (100 - (this.outputBytes / this.inputBytes) * 100).toFixed(2);
+        window.showInformationMessage(
+          `Compress My Css : Applied compression with total size ${this.savingsAverage}%`,
+        );
+      }
     }
   }
 
@@ -137,6 +155,9 @@ export default class Compressor {
   ): string {
     //
 
+    // Fallback compression mode if not provided to default
+    mode = mode ?? this.settings.defaultMode;
+
     // Ignore compression mode?
     if (mode === 'ignore') {
       return content;
@@ -164,8 +185,7 @@ export default class Compressor {
     content = content.replace(/;\s+/gm, ';');
 
     // Stacked Compression Mode
-    const isStackedMode = mode === 'stacked' ?? this.settings.defaultMode;
-    if (isStackedMode) {
+    if (mode === 'stacked') {
       // New line after closing parantheses
       content = content.replace(/}/gm, '}\r\n');
       // New line between ;|@ to make @at-rules neat
