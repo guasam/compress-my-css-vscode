@@ -1,4 +1,4 @@
-import { window, Position, Range, TextDocumentWillSaveEvent, workspace } from 'vscode';
+import { window, Position, Range, TextDocumentWillSaveEvent, workspace, ExtensionContext, commands } from 'vscode';
 
 type CompressionMode = 'stacked' | 'minified';
 
@@ -19,6 +19,9 @@ export default class Compressor {
     this.loadSettings();
   }
 
+  /**
+   * Load Extension Settings
+   */
   loadSettings(): void {
     const config = workspace.getConfiguration('compress-my-css');
     this.settings.compressOnSave = config.get('compressOnSave', false);
@@ -28,9 +31,23 @@ export default class Compressor {
   }
 
   /**
-   * Execute Run Command
-   * @returns
+   * Handle given Extension Context
    *
+   * @param context Extension Context
+   */
+  handleContext(context: ExtensionContext): void {
+    // Load settings on change
+    context.subscriptions.push(workspace.onDidChangeConfiguration(this.loadSettings.bind(this)));
+
+    // Register run command
+    context.subscriptions.push(commands.registerCommand('compress-my-css.run', this.executeRunCommand.bind(this)));
+
+    // Compress on save handler
+    context.subscriptions.push(workspace.onWillSaveTextDocument(this.onSaveTextDocument.bind(this)));
+  }
+
+  /**
+   * Execute Run Command
    */
   executeRunCommand(): void {
     let content = this.getEditorContent();
@@ -40,14 +57,19 @@ export default class Compressor {
     }
 
     const formats = '(' + this.formatTypes.join('|') + ')';
-    const startTagRegex = `\\/\\* ${this.startTagName} (?:\\: ${formats} )?\\*\\/`;
-    const endTagRegex = `\\/\\* ${this.endTagName} \\*\\/`;
+    const startTagRegex = `(\\/\\* ${this.startTagName} (?:\\: ${formats} )?\\*\\/)`;
+    const endTagRegex = `(\\/\\* ${this.endTagName} \\*\\/)`;
     const regex = new RegExp('(?<=' + startTagRegex + '\\s+).*?(?=\\s+' + endTagRegex + ')', 'gs');
 
     content = content.replace(regex, this.compress.bind(this));
-    console.log(content);
+    // console.log(content);
   }
 
+  /**
+   * On Text Document Save
+   *
+   * @param event
+   */
   onSaveTextDocument(event: TextDocumentWillSaveEvent): void {
     if (this.settings.compressOnSave) {
       this.executeRunCommand();
@@ -56,7 +78,8 @@ export default class Compressor {
 
   /**
    * Get active text editor content
-   * @returns
+   *
+   * @returns string
    */
   getEditorContent(): string {
     // Check if active text editor available
@@ -73,7 +96,21 @@ export default class Compressor {
     return document.getText(range);
   }
 
-  compress(content: string, mode: CompressionMode): string {
+  /**
+   * Compress Editor Content with compression mode
+   *
+   * @param content Editor Content
+   * @param mode Compression
+   * @returns string
+   */
+  compress(
+    content: string,
+    startTag: string,
+    mode: CompressionMode,
+    endTag: string,
+    token: number,
+    fullContent: string,
+  ): string {
     // Remove all newlines, linebreaks etc.
     content = content.replace(/(\r\n|\n|\r|\t)/gm, '');
 
@@ -102,6 +139,8 @@ export default class Compressor {
     if (this.settings.spaceAfterRuleSelector) {
       content = content.replace(/{/gm, ' {');
     }
+
+    console.log(content);
 
     return content.trim();
   }

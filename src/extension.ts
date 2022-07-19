@@ -8,19 +8,7 @@ import Compressor from './Compressor';
 export function activate(context: ExtensionContext) {
   // Create new compressor instance
   const compressor = new Compressor();
-
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
-  let disposable = commands.registerCommand('compress-my-css.run', () => {
-    // The code you place here will be executed every time your command is executed
-    compressor.executeRunCommand();
-  });
-
-  context.subscriptions.push(disposable);
-
-  // Compress on save handler
-  context.subscriptions.push(workspace.onWillSaveTextDocument(compressor.onSaveTextDocument));
+  compressor.handleContext(context);
 }
 
 // this method is called when your extension is deactivated
