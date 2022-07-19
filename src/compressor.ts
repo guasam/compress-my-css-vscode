@@ -49,9 +49,8 @@ export default class Compressor {
   }
 
   onSaveTextDocument(event: TextDocumentWillSaveEvent): void {
-    console.log(event.document.languageId);
-    if (event.document.languageId === 'scss') {
-      console.log('checking');
+    if (this.settings.compressOnSave) {
+      this.executeRunCommand();
     }
   }
 
